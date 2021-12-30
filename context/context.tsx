@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 
 const AppContext = React.createContext({
-  projects: [{ id: "test", title: "test" }],
-  addProject: (task: string) => {},
+  projects: [{}],
+  addProject: (projectName: string, colour: string) => {},
   deleteProject: (id: string) => {},
 });
 
 export interface ProjectType {
   id: string;
-  title: string;
+  projectName: string;
+  currentTimeSpent: number;
+  colour: string;
 }
 
 const AppProvider = ({ children }: any) => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
 
-  const addTask = (task: string) => {
-    if (task === "") return;
+  const addProject = (projectName: string, colour: string) => {
+    if (projectName === "") return;
     const newList = [...projects];
-    newList.push({ id: Date.now().toString(), title: task });
+    newList.push({
+      id: Date.now().toString(),
+      projectName: projectName,
+      currentTimeSpent: 0,
+      colour: colour,
+    });
     setProjects(newList);
   };
 
@@ -30,7 +37,7 @@ const AppProvider = ({ children }: any) => {
     <AppContext.Provider
       value={{
         projects: projects,
-        addProject: addTask,
+        addProject: addProject,
         deleteProject: deleteProject,
       }}>
       {children}

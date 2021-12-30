@@ -7,15 +7,28 @@ import { AddTask } from "../screens/AddTask";
 const screens = {
   Home: {
     screen: HomeScreen,
+    navigationOptions: {
+      title: "Projects",
+    },
   },
   Project: {
     screen: Project,
   },
   AddTask: {
     screen: AddTask,
+    navigationOptions: {
+      title: "Add new project",
+    },
   },
 };
 
-const HomeStack = createStackNavigator(screens);
+const HomeStack = createStackNavigator(screens, {
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: "green",
+    },
+    headerTitleAlign: "center",
+  },
+});
 
 export default createAppContainer(HomeStack);
