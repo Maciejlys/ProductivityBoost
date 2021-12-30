@@ -11,23 +11,32 @@ const allColours = {
   black: "black",
   red: "red",
   orange: "orange",
-  yellow: "yellow",
   green: "green",
   blue: "blue",
   purple: "purlpe",
+  pink: "pink",
 };
 
 export const AddTask: React.FC<AddTaskProps> = ({ navigation }: any) => {
   const { addProject } = useContext(AppContext);
   const [text, onChangeText] = useState("");
-  const [chosenColour, setchosenColour] = useState(allColours.black);
+  const [chosenColour, setchosenColour] = useState(allColours.green);
 
   const buttonClickListener = () => {
     if (text === "") return;
-    onChangeText("");
-    addProject(text, chosenColour);
     Keyboard.dismiss();
-    navigation.goBack();
+    setTimeout(() => {
+      onChangeText("");
+      addProject(text, chosenColour);
+      navigation.goBack();
+    }, 100);
+  };
+
+  const handleCanceled = () => {
+    Keyboard.dismiss();
+    setTimeout(() => {
+      navigation.goBack();
+    }, 100);
   };
 
   const handleColourChange = (colour: string) => {
@@ -37,7 +46,7 @@ export const AddTask: React.FC<AddTaskProps> = ({ navigation }: any) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <TextInput
+        <Input
           onChangeText={onChangeText}
           value={text}
           autoFocus={true}
@@ -59,23 +68,70 @@ export const AddTask: React.FC<AddTaskProps> = ({ navigation }: any) => {
           })}
         </ColoursContainer>
         <View>
-          <Pressable onPress={() => buttonClickListener()}>
-            <Text style={{ fontSize: 40 }}>Add</Text>
-          </Pressable>
+          <AddButton
+            style={{ backgroundColor: chosenColour }}
+            onPress={() => buttonClickListener()}>
+            <ButtonAddText>Add this project</ButtonAddText>
+          </AddButton>
         </View>
-      </View>
-      <View>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={{ fontSize: 40 }}>Cancel </Text>
-        </Pressable>
+        <View>
+          <CancelButton>
+            <Pressable onPress={() => handleCanceled()}>
+              <ButtonCancelText>Cancel </ButtonCancelText>
+            </Pressable>
+          </CancelButton>
+        </View>
       </View>
     </View>
   );
 };
 
 const ColoursContainer = styled.View`
-  flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+const AddButton = styled.Pressable`
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  flex-direction: row;
+  border-radius: 50px;
+  elevation: 3;
+  box-shadow: 0 1px 1px #333;
+  margin: 6px 6px;
+`;
+
+const CancelButton = styled.Pressable`
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  flex-direction: row;
+  border-radius: 50px;
+  background-color: transparent;
+  margin: 6px 6px;
+`;
+
+const ButtonAddText = styled.Text`
+  color: white;
+  font-size: 25px;
+  padding: 10px;
+`;
+
+const ButtonCancelText = styled.Text`
+  color: green;
+  font-size: 20px;
+  padding: 10px;
+`;
+
+const Input = styled.TextInput`
+  padding: 10px 10px;
+  flex-direction: row;
+  border-radius: 6px;
+  elevation: 3;
+  background-color: #fff;
+  box-shadow: 0 1px 1px #333;
+  margin: 40px 6px;
+  font-size: 20px;
 `;

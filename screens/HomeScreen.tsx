@@ -34,7 +34,7 @@ export const HomeScreen = ({ navigation }: any) => {
           {/* <Ionicons name="add-circle" size={100} color="green" /> */}
           <AntDesign
             name="pluscircle"
-            size={100}
+            size={80}
             color="green"
             backgroundColor="007AFF"
           />
@@ -45,12 +45,14 @@ export const HomeScreen = ({ navigation }: any) => {
 };
 
 const ProjectItem = styled.Pressable`
+  align-items: center;
   flex-direction: row;
   border-radius: 6px;
   elevation: 3;
   background-color: #fff;
   box-shadow: 0 1px 1px #333;
-  margin: 6px 6px;
+  margin: 10px 15px;
+  padding: 0 10px;
 `;
 
 const ProjectText = styled.Text`
