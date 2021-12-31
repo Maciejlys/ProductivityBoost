@@ -5,8 +5,6 @@ import { AppContext } from "../context/context";
 import { FontAwesome } from "@expo/vector-icons";
 import styled from "styled-components/native";
 
-interface AddTaskProps {}
-
 const allColours = {
   black: "black",
   red: "red",
@@ -17,7 +15,7 @@ const allColours = {
   pink: "pink",
 };
 
-export const AddTask: React.FC<AddTaskProps> = ({ navigation }: any) => {
+export const AddTask = ({ navigation }: any) => {
   const { addProject } = useContext(AppContext);
   const [text, onChangeText] = useState("");
   const [chosenColour, setchosenColour] = useState(allColours.green);

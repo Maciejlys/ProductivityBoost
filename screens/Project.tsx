@@ -5,9 +5,7 @@ import styled from "styled-components/native";
 import { Stopwatch } from "../components/Stopwatch";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-interface ProjectProps {}
-
-export const Project: React.FC<ProjectProps> = ({ navigation }: any) => {
+export const Project = ({ navigation }: any) => {
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isReseted, setIsReseted] = useState(false);
