@@ -1,14 +1,54 @@
-import React, { useContext, useState } from "react";
-import { View, Text, Button, Pressable } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, Button, Pressable, Alert } from "react-native";
 import { AppContext } from "../context/context";
 import styled from "styled-components/native";
 import { Stopwatch } from "../components/Stopwatch";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { TotalTimeSpent } from "../components/TotalTimeSpent";
 
 export const Project = ({ navigation }: any) => {
+  const { addCurrentTime, getCurrentTimeSpent, deleteProject } =
+    useContext(AppContext);
+
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isReseted, setIsReseted] = useState(false);
+  const [currentColor, setCurrentColor] = useState("black");
+  const [currentTimeSpent, setCurrentTimeSpent] = useState(
+    navigation.getParam("currentTimeSpent")
+  );
+
+  useEffect(() => {
+    setCurrentColor(navigation.getParam("colour"));
+  }, []);
+
+  useEffect(() => {
+    navigation.addListener("beforeRemove", (e: any) => {
+      if (!isReseted) {
+        // If we don't have unsaved changes, then we don't need to do anything
+        return;
+      }
+
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      // Prompt the user before leaving the screen
+      Alert.alert(
+        "Discard changes?",
+        "You have unsaved changes. Are you sure to discard them and leave the screen?",
+        [
+          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Discard",
+            style: "destructive",
+            // If the user confirmed, then we dispatch the action we blocked earlier
+            // This will continue the action that had triggered the removal of the screen
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+  }, [navigation]);
 
   const handleStart = () => {
     setIsPaused(false);
@@ -26,20 +66,29 @@ export const Project = ({ navigation }: any) => {
     setIsReseted(true);
   };
 
-  const [currentTimeSpent, setCurrentTimeSpent] = useState(
-    navigation.getParam("currentTimeSpent")
-  );
-  const { addCurrentTime, getCurrentTimeSpent, deleteProject } =
-    useContext(AppContext);
-
-  const add = () => {
-    addCurrentTime(navigation.getParam("id"), 5);
+  const updateTotalTimeSpent = (amount: any) => {
+    addCurrentTime(navigation.getParam("id"), amount);
     setCurrentTimeSpent(getCurrentTimeSpent(navigation.getParam("id")));
   };
 
   const handleDelete = () => {
-    deleteProject(navigation.getParam("id"));
-    navigation.goBack();
+    setIsPaused(true);
+    setIsActive(false);
+    Alert.alert(
+      "Delete this project",
+      "Are you sure you want to delete this project? All progress will be lost!",
+      [
+        { text: "cancel", style: "cancel", onPress: () => {} },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            deleteProject(navigation.getParam("id"));
+            navigation.goBack();
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -50,36 +99,49 @@ export const Project = ({ navigation }: any) => {
       <DeleteButton onPress={() => handleDelete()}>
         <FontAwesome5 name="trash" size={24} color="red" />
       </DeleteButton>
-      <Card style={{ backgroundColor: navigation.getParam("colour") }}>
+      <Card style={{ backgroundColor: currentColor }}>
         <Stopwatch
           isActive={isActive}
           isPaused={isPaused}
           isReseted={isReseted}
           setIsReseted={setIsReseted}
+          updateTotalTimeSpent={updateTotalTimeSpent}
         />
       </Card>
-      <Card></Card>
-      <Card>
+      <TotalTimeSpent time={currentTimeSpent} />
+      <ControlButtonsContainer>
         {isActive ? (
-          <ControlButtons onPress={() => handlePause()}>
-            <FontAwesome5 name="pause" size={48} color="black" />
-          </ControlButtons>
+          <ControlButtonsPress onPress={() => handlePause()}>
+            <FontAwesome5 name="pause" size={48} color={currentColor} />
+          </ControlButtonsPress>
         ) : (
-          <ControlButtons onPress={() => handleStart()}>
-            <FontAwesome5 name="caret-right" size={70} color="black" />
-          </ControlButtons>
+          <ControlButtonsPress onPress={() => handleStart()}>
+            <FontAwesome5 name="caret-right" size={70} color={currentColor} />
+          </ControlButtonsPress>
         )}
-        <ControlButtons onPress={() => handleReset()}>
-          <FontAwesome5 name="stop" size={48} color="black" />
-        </ControlButtons>
-      </Card>
+        <ControlButtonsPress onPress={() => handleReset()}>
+          <FontAwesome5 name="stop" size={48} color={currentColor} />
+        </ControlButtonsPress>
+      </ControlButtonsContainer>
     </View>
   );
 };
 
-const ControlButtons = styled.Pressable`
+const ControlButtonsPress = styled.Pressable`
   padding: 20px;
   margin: 10px;
+  width: 30%;
+  align-items: center;
+`;
+
+const ControlButtonsContainer = styled.Pressable`
+  flex: 4;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  flex-direction: row;
+  border-radius: 50px;
+  margin: 6px 6px;
 `;
 
 const DeleteButton = styled.Pressable`
@@ -106,6 +168,6 @@ const Card = styled.View`
   justify-content: center;
   padding: 5px 10px;
   flex-direction: row;
-  border-radius: 50px;
-  margin: 6px 6px;
+  border-radius: 20px;
+  margin: 15px 15px;
 `;

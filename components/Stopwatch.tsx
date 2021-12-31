@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Text } from "react-native";
 import styled from "styled-components/native";
+import { formatTime } from "../Utils/timeUtil";
 
 interface StopwatchProps {
   isActive: boolean;
   isPaused: boolean;
   isReseted: boolean;
   setIsReseted: (flag: boolean) => void;
+  updateTotalTimeSpent: (amount: any) => void;
 }
 
 export const Stopwatch: React.FC<StopwatchProps> = ({
@@ -14,18 +16,10 @@ export const Stopwatch: React.FC<StopwatchProps> = ({
   isPaused,
   isReseted,
   setIsReseted,
+  updateTotalTimeSpent,
 }) => {
   const [timer, setTimer] = useState(0);
   const countRef = useRef<any>();
-
-  const formatTime = () => {
-    const getSeconds = `0${timer % 60}`.slice(-2);
-    const minutes: any = `${Math.floor(timer / 60)}`;
-    const getMinutes = `0${minutes % 60}`.slice(-2);
-    const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
-
-    return `${getHours} : ${getMinutes} : ${getSeconds}`;
-  };
 
   const handleStart = () => {
     countRef.current = setInterval(() => {
@@ -39,6 +33,7 @@ export const Stopwatch: React.FC<StopwatchProps> = ({
 
   const handleReset = () => {
     clearInterval(countRef.current);
+    updateTotalTimeSpent(timer);
     setTimer(0);
     // save the time later
   };
@@ -62,7 +57,7 @@ export const Stopwatch: React.FC<StopwatchProps> = ({
     }
   }, [isReseted]);
 
-  return <StopwatchStyles>{formatTime()}</StopwatchStyles>;
+  return <StopwatchStyles>{formatTime(timer)}</StopwatchStyles>;
 };
 
 const StopwatchStyles = styled.Text`

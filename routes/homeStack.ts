@@ -28,6 +28,9 @@ const HomeStack = createStackNavigator(screens, {
       backgroundColor: "green",
     },
     headerTitleAlign: "center",
+    headerTitleStyle: {
+      color: "white",
+    },
   },
 });
 
