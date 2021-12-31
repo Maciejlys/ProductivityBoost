@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import * as SQLite from "expo-sqlite";
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 const AppContext = React.createContext({
   projects: [{}],
   addProject: (projectName: string, colour: string) => {},
+  addCurrentTime: (id: string, timeSpent: number) => {},
+  getCurrentTimeSpent: (id: string) => {},
   deleteProject: (id: string) => {},
 });
 
@@ -28,6 +33,18 @@ const AppProvider = ({ children }: any) => {
     setProjects(newList);
   };
 
+  const addCurrentTime = (id: string, timeSpent: number) => {
+    projects.forEach((project) => {
+      if (project.id === id) {
+        project.currentTimeSpent += timeSpent;
+      }
+    });
+  };
+
+  const getCurrentTimeSpent = (id: string) => {
+    return projects.filter((project) => project.id === id)[0].currentTimeSpent;
+  };
+
   const deleteProject = (id: string) => {
     const newList = projects.filter((task) => task.id !== id);
     setProjects(newList);
@@ -36,9 +53,11 @@ const AppProvider = ({ children }: any) => {
   return (
     <AppContext.Provider
       value={{
-        projects: projects,
-        addProject: addProject,
-        deleteProject: deleteProject,
+        getCurrentTimeSpent,
+        projects,
+        addProject,
+        addCurrentTime,
+        deleteProject,
       }}>
       {children}
     </AppContext.Provider>
