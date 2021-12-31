@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import * as SQLite from "expo-sqlite";
-import Constants from "expo-constants";
-import { Platform } from "react-native";
 
 const AppContext = React.createContext({
   projects: [{}],

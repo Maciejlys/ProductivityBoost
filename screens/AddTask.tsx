@@ -49,6 +49,7 @@ export const AddTask: React.FC<AddTaskProps> = ({ navigation }: any) => {
         <Input
           onChangeText={onChangeText}
           value={text}
+          maxLength={30}
           autoFocus={true}
           clearTextOnFocus={true}
           placeholder="Project name"

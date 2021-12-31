@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, Pressable } from "react-native";
 import { AppContext } from "../context/context";
 import styled from "styled-components/native";
 import { Stopwatch } from "../components/Stopwatch";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 interface ProjectProps {}
 
@@ -30,11 +31,17 @@ export const Project: React.FC<ProjectProps> = ({ navigation }: any) => {
   const [currentTimeSpent, setCurrentTimeSpent] = useState(
     navigation.getParam("currentTimeSpent")
   );
-  const { addCurrentTime, getCurrentTimeSpent } = useContext(AppContext);
+  const { addCurrentTime, getCurrentTimeSpent, deleteProject } =
+    useContext(AppContext);
 
   const add = () => {
     addCurrentTime(navigation.getParam("id"), 5);
     setCurrentTimeSpent(getCurrentTimeSpent(navigation.getParam("id")));
+  };
+
+  const handleDelete = () => {
+    deleteProject(navigation.getParam("id"));
+    navigation.goBack();
   };
 
   return (
@@ -42,6 +49,9 @@ export const Project: React.FC<ProjectProps> = ({ navigation }: any) => {
       <ProjectNameView>
         <ProjectNameTxt>{navigation.getParam("projectName")}</ProjectNameTxt>
       </ProjectNameView>
+      <DeleteButton onPress={() => handleDelete()}>
+        <FontAwesome5 name="trash" size={24} color="red" />
+      </DeleteButton>
       <Card style={{ backgroundColor: navigation.getParam("colour") }}>
         <Stopwatch
           isActive={isActive}
@@ -50,33 +60,36 @@ export const Project: React.FC<ProjectProps> = ({ navigation }: any) => {
           setIsReseted={setIsReseted}
         />
       </Card>
+      <Card></Card>
       <Card>
-        <Text>Test</Text>
-      </Card>
-      <Card>
-        <Button
-          title="start"
-          onPress={() => {
-            handleStart();
-          }}
-        />
-        <Button
-          title="pause"
-          onPress={() => {
-            handlePause();
-          }}
-        />
-        <Button
-          title="reset"
-          onPress={() => {
-            handleReset();
-          }}
-        />
-        <Text>Test</Text>
+        {isActive ? (
+          <ControlButtons onPress={() => handlePause()}>
+            <FontAwesome5 name="pause" size={48} color="black" />
+          </ControlButtons>
+        ) : (
+          <ControlButtons onPress={() => handleStart()}>
+            <FontAwesome5 name="caret-right" size={70} color="black" />
+          </ControlButtons>
+        )}
+        <ControlButtons onPress={() => handleReset()}>
+          <FontAwesome5 name="stop" size={48} color="black" />
+        </ControlButtons>
       </Card>
     </View>
   );
 };
+
+const ControlButtons = styled.Pressable`
+  padding: 20px;
+  margin: 10px;
+`;
+
+const DeleteButton = styled.Pressable`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+`;
 
 const ProjectNameTxt = styled.Text`
   font-size: 20px;
@@ -86,6 +99,7 @@ const ProjectNameView = styled.View`
   align-items: center;
   justify-content: center;
   flex: 1;
+  flex-direction: row;
 `;
 
 const Card = styled.View`

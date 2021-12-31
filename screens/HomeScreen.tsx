@@ -56,7 +56,7 @@ const ProjectItem = styled.Pressable`
 `;
 
 const ProjectText = styled.Text`
-  font-size: 30px;
+  font-size: 19px;
   margin: 10px;
 `;
 
