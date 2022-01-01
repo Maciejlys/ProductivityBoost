@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AppContext = React.createContext({
   projects: [{}],
@@ -15,8 +16,30 @@ export interface ProjectType {
   colour: string;
 }
 
+const saveData = async (data: ProjectType[]) => {
+  try {
+    AsyncStorage.setItem("data", JSON.stringify(data));
+  } catch (error) {
+    alert(error);
+  }
+};
+
+const getData = async (): Promise<ProjectType[]> => {
+  try {
+    const data = (await AsyncStorage.getItem("data")) || "[]";
+    return JSON.parse(data) as ProjectType[];
+  } catch (error) {
+    alert(error);
+  }
+  return [];
+};
+
 const AppProvider = ({ children }: any) => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
+
+  useEffect(() => {
+    getData().then((projects) => setProjects(projects));
+  }, []);
 
   const addProject = (projectName: string, colour: string) => {
     if (projectName === "") return;
@@ -28,14 +51,17 @@ const AppProvider = ({ children }: any) => {
       colour: colour,
     });
     setProjects(newList);
+    saveData(newList);
   };
 
   const addCurrentTime = (id: string, timeSpent: number) => {
-    projects.forEach((project) => {
-      if (project.id === id) {
-        project.currentTimeSpent += timeSpent;
-      }
-    });
+    const elementIndex = projects.findIndex((element) => element.id == id);
+    let newArray = [...projects];
+    newArray[elementIndex] = {
+      ...newArray[elementIndex],
+      currentTimeSpent: (newArray[elementIndex].currentTimeSpent += timeSpent),
+    };
+    saveData(newArray);
   };
 
   const getCurrentTimeSpent = (id: string) => {
@@ -45,6 +71,7 @@ const AppProvider = ({ children }: any) => {
   const deleteProject = (id: string) => {
     const newList = projects.filter((task) => task.id !== id);
     setProjects(newList);
+    saveData(newList);
   };
 
   return (

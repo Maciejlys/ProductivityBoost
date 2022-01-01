@@ -9,14 +9,14 @@ interface TotalTimeSpentProps {
 export const TotalTimeSpent: React.FC<TotalTimeSpentProps> = ({ time }) => {
   return (
     <TotalTimeSpentView>
-      <TotalTimeSpentTxt>Total time spent:</TotalTimeSpentTxt>
+      <TotalTimeSpentTxt>Total time spent</TotalTimeSpentTxt>
       <TotalTimeSpentTxt>{formatTime(time)}</TotalTimeSpentTxt>
     </TotalTimeSpentView>
   );
 };
 
 const TotalTimeSpentTxt = styled.Text`
-  font-size: 20px;
+  font-size: 30px;
 `;
 
 const TotalTimeSpentView = styled.View`

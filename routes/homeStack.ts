@@ -13,6 +13,9 @@ const screens = {
   },
   Project: {
     screen: Project,
+    navigationOptions: {
+      headerLeft: () => null,
+    },
   },
   AddTask: {
     screen: AddTask,

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, Button, Pressable, Alert } from "react-native";
+import { useKeepAwake } from "expo-keep-awake";
+import { View, Alert, Platform, BackHandler } from "react-native";
 import { AppContext } from "../context/context";
 import styled from "styled-components/native";
 import { Stopwatch } from "../components/Stopwatch";
@@ -7,6 +8,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { TotalTimeSpent } from "../components/TotalTimeSpent";
 
 export const Project = ({ navigation }: any) => {
+  useKeepAwake();
   const { addCurrentTime, getCurrentTimeSpent, deleteProject } =
     useContext(AppContext);
 
@@ -20,35 +22,32 @@ export const Project = ({ navigation }: any) => {
 
   useEffect(() => {
     setCurrentColor(navigation.getParam("colour"));
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () =>
+      handleReturn()
+    );
+    return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    navigation.addListener("beforeRemove", (e: any) => {
-      if (!isReseted) {
-        // If we don't have unsaved changes, then we don't need to do anything
-        return;
-      }
-
-      // Prevent default behavior of leaving the screen
-      e.preventDefault();
-
-      // Prompt the user before leaving the screen
-      Alert.alert(
-        "Discard changes?",
-        "You have unsaved changes. Are you sure to discard them and leave the screen?",
-        [
-          { text: "Don't leave", style: "cancel", onPress: () => {} },
-          {
-            text: "Discard",
-            style: "destructive",
-            // If the user confirmed, then we dispatch the action we blocked earlier
-            // This will continue the action that had triggered the removal of the screen
-            onPress: () => navigation.dispatch(e.data.action),
+  const handleReturn = () => {
+    Alert.alert(
+      "Leave this session?",
+      "Are you sure? All progress will be lost.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Leave anyway",
+          style: "destructive",
+          onPress: () => {
+            setIsActive(false);
+            setIsPaused(false);
+            setIsReseted(false);
+            navigation.goBack();
           },
-        ]
-      );
-    });
-  }, [navigation]);
+        },
+      ]
+    );
+    return true;
+  };
 
   const handleStart = () => {
     setIsPaused(false);
@@ -74,11 +73,16 @@ export const Project = ({ navigation }: any) => {
   const handleDelete = () => {
     setIsPaused(true);
     setIsActive(false);
+    if (Platform.OS == "web") {
+      deleteProject(navigation.getParam("id"));
+      navigation.goBack();
+      return;
+    }
     Alert.alert(
-      "Delete this project",
-      "Are you sure you want to delete this project? All progress will be lost!",
+      "Delete this project?",
+      "Are you sure? All progress will be lost.",
       [
-        { text: "cancel", style: "cancel", onPress: () => {} },
+        { text: "cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
