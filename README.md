@@ -17,6 +17,7 @@ What can you do:
 - [styled-components](https://styled-components.com/)
 - [awesome-alerts](https://www.npmjs.com/package/react-native-awesome-alerts)
 - [async-storage](https://github.com/react-native-async-storage/async-storage)
+- [react-navigation](https://reactnavigation.org/)
 
 # What would I change?
 
