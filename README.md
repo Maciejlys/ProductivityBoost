@@ -24,9 +24,8 @@ What can you do:
 I think I learned alot while doing this projcet, and thats why \
 I would definitely approach this problem differently this time.\
 First of all, I would seperate each component so I can reuse them\
-also I would read a bit about workflow, so that after implementing\
-working alerts I found out that they doesn't work on web and I had to\
-redo them.
+later on, also I would read more about development, so that after implementing\
+alerts I would not have to redo them as I found out that they don't work on web\
 Second of all, I would create better routing as in this app its clunky\
 and sometimes it doesn't work as expected, or it lags a bit.
 
