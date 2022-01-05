@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useKeepAwake } from "expo-keep-awake";
-import { View, Alert, Platform, BackHandler, Pressable } from "react-native";
+import { View, BackHandler, Pressable } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { AppContext } from "../context/context";
 import styled from "styled-components/native";

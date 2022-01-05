@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Text } from "react-native";
 import styled from "styled-components/native";
 import { formatTime } from "../Utils/timeUtil";
 

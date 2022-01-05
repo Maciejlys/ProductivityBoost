@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Text, View, Pressable, FlatList } from "react-native";
+import { View, Pressable, FlatList } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { AppContext } from "../context/context";
