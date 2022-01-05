@@ -2,12 +2,15 @@
   "name": "productivityboost",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "homepage": "https://maciejlys.github.io/ProductivityBoost",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "deploy": "gh-pages -d web-build",
+    "predeploy": "expo build:web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
@@ -17,6 +20,7 @@
     "expo": "~44.0.0",
     "expo-sqlite": "~10.1.0",
     "expo-status-bar": "~1.2.0",
+    "gh-pages": "^3.2.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
