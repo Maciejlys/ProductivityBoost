@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/ProductivityBoost/static/js/app.8ca136fa.chunk.js",
-    "app.js.map": "/ProductivityBoost/static/js/app.8ca136fa.chunk.js.map",
+    "app.js": "/ProductivityBoost/static/js/app.821890ae.chunk.js",
+    "app.js.map": "/ProductivityBoost/static/js/app.821890ae.chunk.js.map",
     "runtime~app.js": "/ProductivityBoost/static/js/runtime~app.e367b0c6.js",
     "runtime~app.js.map": "/ProductivityBoost/static/js/runtime~app.e367b0c6.js.map",
     "static/js/2.846777df.chunk.js": "/ProductivityBoost/static/js/2.846777df.chunk.js",
@@ -29,6 +29,6 @@
   "entrypoints": [
     "static/js/runtime~app.e367b0c6.js",
     "static/js/2.846777df.chunk.js",
-    "static/js/app.8ca136fa.chunk.js"
+    "static/js/app.821890ae.chunk.js"
   ]
 }
