@@ -101,7 +101,7 @@ export const Project = ({ navigation }: any) => {
         show={showAlertGoBack}
         showProgress={false}
         title="Are you sure?"
-        message="All of the progress will be lost!"
+        message="Unsaved progress will be lost"
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
@@ -124,8 +124,8 @@ export const Project = ({ navigation }: any) => {
         show={showAlertDelete}
         showProgress={false}
         title="Delete this project?"
-        message="All of the progress will be lost!"
-        closeOnTouchOutside={true}
+        message="Unsaved progress will be lost"
+        closeOnTouchOutside={false}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
         showConfirmButton={true}
