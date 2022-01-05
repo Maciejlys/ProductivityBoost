@@ -31,7 +31,6 @@ export const HomeScreen = ({ navigation }: any) => {
       </View>
       <FooterAddButton>
         <Pressable onPress={() => navigation.navigate("AddTask")}>
-          {/* <Ionicons name="add-circle" size={100} color="green" /> */}
           <AntDesign
             name="pluscircle"
             size={80}

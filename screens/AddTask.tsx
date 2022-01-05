@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Pressable, Text, View, Keyboard } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { Pressable, View, Keyboard } from "react-native";
 import { AppContext } from "../context/context";
 import { FontAwesome } from "@expo/vector-icons";
 import styled from "styled-components/native";
@@ -76,7 +75,7 @@ export const AddTask = ({ navigation }: any) => {
         <View>
           <CancelButton>
             <Pressable onPress={() => handleCanceled()}>
-              <ButtonCancelText>Cancel </ButtonCancelText>
+              <ButtonCancelText>Cancel</ButtonCancelText>
             </Pressable>
           </CancelButton>
         </View>

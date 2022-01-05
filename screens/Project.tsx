@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useKeepAwake } from "expo-keep-awake";
-import { View, Alert, Platform, BackHandler } from "react-native";
+import { View, Alert, Platform, BackHandler, Pressable } from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
 import { AppContext } from "../context/context";
 import styled from "styled-components/native";
 import { Stopwatch } from "../components/Stopwatch";
@@ -14,6 +15,8 @@ export const Project = ({ navigation }: any) => {
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [showAlertGoBack, setshowAlertGoBack] = useState(false);
+  const [showAlertDelete, setshowAlertDelete] = useState(false);
   const [isReseted, setIsReseted] = useState(false);
   const [currentColor, setCurrentColor] = useState("black");
   const [currentTimeSpent, setCurrentTimeSpent] = useState(
@@ -29,23 +32,11 @@ export const Project = ({ navigation }: any) => {
   }, []);
 
   const handleReturn = () => {
-    Alert.alert(
-      "Leave this session?",
-      "Are you sure? All progress will be lost.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Leave anyway",
-          style: "destructive",
-          onPress: () => {
-            setIsActive(false);
-            setIsPaused(false);
-            setIsReseted(false);
-            navigation.goBack();
-          },
-        },
-      ]
-    );
+    if (!isActive && !isPaused) {
+      navigation.goBack();
+      return;
+    }
+    setshowAlertGoBack(!showAlertGoBack);
     return true;
   };
 
@@ -61,7 +52,7 @@ export const Project = ({ navigation }: any) => {
 
   const handleReset = () => {
     setIsActive(false);
-    setIsPaused(true);
+    setIsPaused(false);
     setIsReseted(true);
   };
 
@@ -70,39 +61,8 @@ export const Project = ({ navigation }: any) => {
     setCurrentTimeSpent(getCurrentTimeSpent(navigation.getParam("id")));
   };
 
-  const handleDelete = () => {
-    setIsPaused(true);
-    setIsActive(false);
-    if (Platform.OS == "web") {
-      deleteProject(navigation.getParam("id"));
-      navigation.goBack();
-      return;
-    }
-    Alert.alert(
-      "Delete this project?",
-      "Are you sure? All progress will be lost.",
-      [
-        { text: "cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            deleteProject(navigation.getParam("id"));
-            navigation.goBack();
-          },
-        },
-      ]
-    );
-  };
-
   return (
     <View style={{ flex: 1 }}>
-      <ProjectNameView>
-        <ProjectNameTxt>{navigation.getParam("projectName")}</ProjectNameTxt>
-      </ProjectNameView>
-      <DeleteButton onPress={() => handleDelete()}>
-        <FontAwesome5 name="trash" size={24} color="red" />
-      </DeleteButton>
       <Card style={{ backgroundColor: currentColor }}>
         <Stopwatch
           isActive={isActive}
@@ -127,6 +87,61 @@ export const Project = ({ navigation }: any) => {
           <FontAwesome5 name="stop" size={48} color={currentColor} />
         </ControlButtonsPress>
       </ControlButtonsContainer>
+      <GoBackButton>
+        <Pressable onPress={handleReturn}>
+          <GoBackButtonText>Go back</GoBackButtonText>
+        </Pressable>
+      </GoBackButton>
+      <GoBackButton>
+        <Pressable onPress={() => setshowAlertDelete(true)}>
+          <DeleteButtonText>Delete</DeleteButtonText>
+        </Pressable>
+      </GoBackButton>
+      <AwesomeAlert
+        show={showAlertGoBack}
+        showProgress={false}
+        title="Are you sure?"
+        message="All of the progress will be lost!"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, cancel"
+        confirmText="Yes, go back"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setshowAlertGoBack(!showAlertGoBack);
+        }}
+        onConfirmPressed={() => {
+          setshowAlertGoBack(!showAlertGoBack);
+          setIsActive(false);
+          setIsPaused(false);
+          setIsReseted(false);
+          navigation.goBack();
+        }}
+      />
+      <AwesomeAlert
+        show={showAlertDelete}
+        showProgress={false}
+        title="Delete this project?"
+        message="All of the progress will be lost!"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No, cancel"
+        confirmText="Yes, delete it"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => {
+          setshowAlertDelete(!showAlertDelete);
+        }}
+        onConfirmPressed={() => {
+          setshowAlertDelete(!showAlertDelete);
+
+          deleteProject(navigation.getParam("id"));
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 };
@@ -150,20 +165,26 @@ const ControlButtonsContainer = styled.Pressable`
 
 const DeleteButton = styled.Pressable`
   position: absolute;
-  top: 0;
+  bottom: 0;
   right: 0;
   padding: 10px;
 `;
 
-const ProjectNameTxt = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-`;
-const ProjectNameView = styled.View`
+const GoBackButton = styled.View`
   align-items: center;
   justify-content: center;
   flex: 1;
+  margin-bottom: 30px;
   flex-direction: row;
+`;
+
+const GoBackButtonText = styled.Text`
+  color: green;
+  font-size: 30px;
+`;
+const DeleteButtonText = styled.Text`
+  color: red;
+  font-size: 15px;
 `;
 
 const Card = styled.View`

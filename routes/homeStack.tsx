@@ -1,26 +1,37 @@
+import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { HomeScreen } from "../screens/HomeScreen";
 import { Project } from "../screens/Project";
 import { AddTask } from "../screens/AddTask";
+import { ProjectHeader } from "../components/ProjectHeader";
 
 const screens = {
   Home: {
     screen: HomeScreen,
-    navigationOptions: {
-      title: "Projects",
+    navigationOptions: () => {
+      return {
+        headerTitle: () => <ProjectHeader title={"Home"} />,
+      };
     },
   },
   Project: {
     screen: Project,
-    navigationOptions: {
-      headerLeft: () => null,
+    navigationOptions: ({ navigation }: any) => {
+      return {
+        headerTitle: () => (
+          <ProjectHeader title={navigation.getParam("projectName")} />
+        ),
+        headerLeft: () => null,
+      };
     },
   },
   AddTask: {
     screen: AddTask,
-    navigationOptions: {
-      title: "Add new project",
+    navigationOptions: () => {
+      return {
+        headerTitle: () => <ProjectHeader title={"Add a new project"} />,
+      };
     },
   },
 };
